@@ -4,4 +4,9 @@ import { pluginLess } from '@rsbuild/plugin-less';
 
 export default defineConfig({
   plugins: [pluginReact(), pluginLess()],
+  resolve: {
+    alias: {
+      '@': './src',
+    },
+  },
 });
