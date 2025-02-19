@@ -24,6 +24,7 @@ const useRequest = <T, K>(
     try {
       await setLoading(true);
       const data = await request(params);
+      console.log('request => data: ', data);
       await setData(data);
       onSucess?.(data, params);
       await setLoading(false);

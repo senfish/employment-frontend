@@ -1,0 +1,31 @@
+.table-filter {
+  .table-filter-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    // gap: 12px 8px;
+    row-gap: 12px;
+    .table-filter-item {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      // margin-left: auto;
+      .table-filter-label {
+        display: inline-block;
+        text-align: right;
+        flex-shrink: 0;
+      }
+      .table-filter-component {
+        // flex: 1;
+      }
+      .table-filter-actions {
+        text-align: right;
+        flex: 1;
+        // display: flex;
+        button:first-child {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}

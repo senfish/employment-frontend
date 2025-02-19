@@ -19,8 +19,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@request": ["src/services/request"],
+      "@/*": ["./src/*"],
+      "@request": ["./src/services/request"],
     }
   },
   "include": ["src"]
