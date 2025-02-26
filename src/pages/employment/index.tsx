@@ -7,6 +7,7 @@ import { EmploymentListQuery, useChange } from "./store"
 import { useEffect } from "react"
 import EditEmploymentDrawer from "./editDrawer"
 import { useDialog } from "@/hooks/useDialog"
+import axios from "axios"
 
 
 
@@ -17,24 +18,22 @@ const EmploymentList = () => {
   const { run, data, loading } = useRequest<{ query: EmploymentListQuery }, EmploymentListInfo>({
     request: employmentListDispatch,
   });
-  const { run: exportEmployment } = useRequest({
-    request: exportEmploymentDispatch,
-  }, {
-    onSucess: (response) => {
-      // console.log('response: ', response);
-      // const url = window.URL.createObjectURL(
-      //   new Blob([response.data])
-      // );
-      // const link = document.createElement("a");
-      // link.href = url;
-      // link.setAttribute("download", "data.xls"); // 设置下载文件名
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-      // window.URL.revokeObjectURL(url);
-
-    }
-  })
+  // const { run: exportEmployment } = useRequest<null, { data: any, type: string }>({
+  //   request: exportEmploymentDispatch,
+  // }, {
+  //   onSucess: (response) => {
+  //     const url = window.URL.createObjectURL(
+  //       new Blob([response.data])
+  //     );
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "data.xls"); // 设置下载文件名
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //     window.URL.revokeObjectURL(url);
+  //   }
+  // })
   const initList = () => {
     run({
       query: {
@@ -77,12 +76,20 @@ const EmploymentList = () => {
       }
     })
   }
-  const exportFile = () => {
-    // message.success('导出成功')
-    // exportEmployment()
-    const link = document.createElement("a");
-    link.href = `http://${import.meta.env.PUBLIC_HOST}:${import.meta.env.PUBLIC_PORT}/employment/export`;
-    link.setAttribute("download", "data.xls"); // 设置下载文件名
+  const exportFile = async () => {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(
+      `http://${import.meta.env.PUBLIC_HOST}:${import.meta.env.PUBLIC_PORT}/employment/export`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: 'blob',
+      });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'demo.xlsx');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

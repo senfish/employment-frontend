@@ -22,7 +22,6 @@ export const employmentListDispatch = async <T>(data: any) => {
   return info as T;
 };
 
-
 export const deleteEmploymentDispatch = async <T>(data: any) => {
   const info = await request<T>({
     method: 'DELETE',

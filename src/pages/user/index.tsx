@@ -14,7 +14,7 @@ const User = () => {
   }, {
     onSucess: () => {
       message.success('提交成功');
-      // form.resetFields();
+      form.resetFields();
     }
   });
   const { run: uploadIDCard, loading: uploadIDLoading } = useRequest<{
@@ -141,8 +141,19 @@ const User = () => {
         <Form.Item label='开户支行' name='bankBranch' rules={[{ required: true, message: '请输入开户支行' }]}>
           <Input placeholder='请输入开户支行' />
         </Form.Item>
-        <Form.Item label='手机号' name='phone' rules={[{ required: true, message: '请输入手机号' }]}>
-          <Input placeholder='请输入手机号' />
+        <Form.Item
+          label='手机号'
+          name='phone'
+          rules={[{
+            required: true, validator: (rule, value) => {
+              const regex = /^1[3-9]\d{9}$/;
+              if (!regex.test(value)) {
+                return Promise.reject('请输入正确的手机号');
+              }
+              return Promise.resolve();
+            }
+          }]}>
+          <InputNumber style={{ width: '100%' }} placeholder='请输入手机号' />
         </Form.Item>
       </Form>
       <div className='footer'><Button type='primary' onClick={onSubmit}>提交</Button></div>

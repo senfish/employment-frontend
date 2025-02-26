@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { message } from 'antd';
 
 const instance = axios.create({
@@ -12,9 +12,23 @@ interface RequestOptions {
   params?: Record<string, unknown>;
   data?: Record<string, unknown>;
 }
+instance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      config.headers = {
+        Authorization: `Bearer ${token}`,
+      } as AxiosRequestHeaders;
+    }
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  }
+);
 instance.interceptors.response.use(
   (response) => {
-    console.log('response: ', response);
     if ([200, 201].includes(response.status)) {
       if (response.data?.code?.startsWith('100')) {
         // 状态码是200，但是code是以100开头，说明是业务错误

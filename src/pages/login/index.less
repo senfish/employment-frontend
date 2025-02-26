@@ -1,0 +1,78 @@
+.login {
+  background-image: url('@/assets/login-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  .login-wrapper {
+    display: flex;
+    padding: 8px;
+    width: 700px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+
+    .login-content-left {
+      width: 320px;
+      height: 440px;
+      border-radius: 8px;
+      background-image: url('@/assets/login-left-section.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      .login-content-left-wrapper {
+        padding: 40px 40px;
+        color: #fff;
+        .title {
+          font-family: 'HONOR Sans CN';
+          font-size: 32px;
+          font-style: normal;
+          font-weight: 800;
+          margin-bottom: 36px;
+        }
+        .hello {
+          font-size: 48px;
+          font-style: normal;
+          font-weight: 500;
+        }
+        .welcome {
+          margin-bottom: 48px;
+          font-size: 48px;
+          font-style: normal;
+          font-weight: 800;
+        }
+        .footer {
+          font-weight: 500;
+        }
+      }
+    }
+    .login-content-right {
+      padding: 40px 48px;
+      flex: 1;
+      .login-title {
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 800;
+        margin-bottom: 48px;
+      }
+      .login-form {
+        // height: ;
+        .ant-form-item-label {
+          font-weight: 600;
+          font-size: 14px;
+        }
+        .captcha-image {
+          padding-top: 3px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+      .login-btn {
+        width: 100%;
+        margin-top: 48px;
+      }
+    }
+  }
+}
