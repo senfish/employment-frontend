@@ -1,7 +1,7 @@
 import Card from "@/component/Card"
 import TableFilter from "@/component/Filter"
 import useRequest from "@/hooks/useRequest"
-import { Button, Divider, Input, message, Table, TableColumnProps, Popconfirm } from "antd"
+// import { Button, Divider, Input, message, Table, TableColumnProps, Popconfirm } from "antd"
 import { EmploymentListItem, employmentListDispatch, EmploymentListInfo, deleteEmploymentDispatch, exportEmploymentDispatch } from "./service"
 import { EmploymentListQuery, useChange } from "./store"
 import { useEffect } from "react"
@@ -10,14 +10,24 @@ import { useDialog } from "@/hooks/useDialog"
 import axios from "axios"
 
 
+import './index.less'
+import { DownlandOutline } from "antd-mobile-icons"
+import { Tag, Button, Popup, Input, Modal, Toast } from 'antd-mobile'
+import EditPopup from "./EditPopup"
+
 
 const EmploymentList = () => {
-  const { open, holder } = useDialog(EditEmploymentDrawer);
+  // const { open, holder } = useDialog(EditEmploymentDrawer);
+  // EditPopup
+  const { open, holder } = useDialog(EditPopup);
+
   const { filter, onChangeFilter, onResetFilter } = useChange();
 
   const { run, data, loading } = useRequest<{ query: EmploymentListQuery }, EmploymentListInfo>({
     request: employmentListDispatch,
   });
+  console.log('data: ', data);
+
   // const { run: exportEmployment } = useRequest<null, { data: any, type: string }>({
   //   request: exportEmploymentDispatch,
   // }, {
@@ -46,7 +56,12 @@ const EmploymentList = () => {
     request: deleteEmploymentDispatch,
   }, {
     onSucess() {
-      message.success('删除成功')
+      Toast.show({
+        icon: 'success',
+        content: '删除成功',
+        position: 'bottom',
+      })
+      // message.success('删除成功')
       initList()
     }
   })
@@ -70,11 +85,17 @@ const EmploymentList = () => {
     })
   }
   const delEmployment = (record: EmploymentListItem) => {
-    deleteEmployment({
-      body: {
-        id: record.id
-      }
+    Modal.confirm({
+      content: `是否删除【${record.name}】`,
+      onConfirm: async () => {
+        deleteEmployment({
+          body: {
+            id: record.id
+          }
+        })
+      },
     })
+
   }
   const exportFile = async () => {
     const token = localStorage.getItem('token');
@@ -100,80 +121,137 @@ const EmploymentList = () => {
       getList: initList
     })
   }
-  const items = [{
-    label: '姓名',
-    field: 'name',
-    component: <Input onChange={(e) => onChangeFilter('name')(e.target.value?.trim())} />
-  }];
-  const columns: TableColumnProps<EmploymentListItem>[] = [{
-    title: '身份证号',
-    dataIndex: 'idCard',
-    key: 'idCard',
-  }, {
-    title: '银行卡号',
-    dataIndex: 'bank',
-    key: 'bank',
-  }, {
-    title: '姓名',
-    dataIndex: 'name',
-    key: 'name'
-  }, {
-    title: '开户地',
-    dataIndex: 'bankLocation',
-    key: 'bankLocation'
-  }, {
-    title: '开户支行',
-    dataIndex: 'bankBranch',
-    key: 'bankBranch'
-  }, {
-    title: '金额',
-    dataIndex: 'money',
-    key: 'money'
-  }, {
-    title: '手机号',
-    dataIndex: 'phone',
-    key: 'phone'
-  }, {
-    title: '操作',
-    dataIndex: 'action',
-    key: 'action',
-    render: (_, record) => {
-      return <>
-        <a onClick={() => onEdit(record)}>编辑</a>
-        <Divider type="vertical" />
-        <Popconfirm
-          title={`确定删除【${record.name}】的信息吗`}
-          onConfirm={() => delEmployment(record)}
-        >
-          <a >删除</a>
-        </Popconfirm>
-      </>
-    }
-  }]
-  return <>
+  return <div className="employment-page">
     {holder}
-    <Card >
-      <TableFilter items={items} onSearch={onSearch} onReset={onReset} />
-    </Card>
-    <Card>
-      <Button type='primary' style={{ marginBottom: 12 }} onClick={exportFile}>导出</Button>
-      <Table
-        loading={loading}
-        columns={columns}
-        dataSource={data?.data}
-        scroll={{ x: 'max-content' }}
-        pagination={{
-          pageSize: filter.pageSize,
-          current: filter.page,
-          total: data?.total,
-          showTotal: (total) => `共${total}条`,
-          onChange: (page, pageSize) => {
-            onChangeFilter('page')(page);
-            onChangeFilter('pageSize')(pageSize);
-          }
-        }}
+    <div className="employment-page-search">
+      <Input
+        placeholder='请输入内容'
       />
-    </Card >
-  </>
+      <DownlandOutline onClick={exportFile} className="download" />
+    </div>
+    <div className="employment-page-list">
+      <div className="employment-page-list-content">
+        {
+          data?.data.map(item => {
+            const list = [{
+              label: '身份证号',
+              value: item.idCard
+            }, {
+              label: '银行卡号',
+              value: item.bank
+            }, {
+              label: '姓名',
+              value: item.name
+            }, {
+              label: '开户地',
+              value: item.bankLocation
+            }, {
+              label: '开户支行',
+              value: item.bankBranch
+            }, {
+              label: '金额',
+              value: item.money
+            }, {
+              label: '手机号',
+              value: item.phone
+            }]
+            return <div className="employment-page-list-content-info" key={item.id}>
+              {
+                list.map((item, index) => {
+                  return <div className="employment-page-list-content-info-item" key={index}>
+                    <label>{item.label}:</label>
+                    <span>{item.value}</span>
+                  </div>
+                })
+              }
+              <div className="footer">
+                <Button onClick={() => onEdit(item)} size='mini' color='primary'>
+                  编辑
+                </Button>
+                <Button onClick={() => delEmployment(item)} size='mini' color='danger'>
+                  删除
+                </Button>
+              </div>
+            </div>
+          })
+        }
+      </div>
+    </div>
+  </div>
+  // const items = [{
+  //   label: '姓名',
+  //   field: 'name',
+  //   component: <Input onChange={(e) => onChangeFilter('name')(e.target.value?.trim())} />
+  // }];
+  // const columns: TableColumnProps<EmploymentListItem>[] = [{
+  //   title: '身份证号',
+  //   dataIndex: 'idCard',
+  //   key: 'idCard',
+  // }, {
+  //   title: '银行卡号',
+  //   dataIndex: 'bank',
+  //   key: 'bank',
+  // }, {
+  //   title: '姓名',
+  //   dataIndex: 'name',
+  //   key: 'name'
+  // }, {
+  //   title: '开户地',
+  //   dataIndex: 'bankLocation',
+  //   key: 'bankLocation'
+  // }, {
+  //   title: '开户支行',
+  //   dataIndex: 'bankBranch',
+  //   key: 'bankBranch'
+  // }, {
+  //   title: '金额',
+  //   dataIndex: 'money',
+  //   key: 'money'
+  // }, {
+  //   title: '手机号',
+  //   dataIndex: 'phone',
+  //   key: 'phone'
+  // }, {
+  //   title: '操作',
+  //   dataIndex: 'action',
+  //   key: 'action',
+  //   render: (_, record) => {
+  //     return <>
+  //       <a onClick={() => onEdit(record)}>编辑</a>
+  //       <Divider type="vertical" />
+  //       <Popconfirm
+  //         title={`确定删除【${record.name}】的信息吗`}
+  //         onConfirm={() => delEmployment(record)}
+  //       >
+  //         <a >删除</a>
+  //       </Popconfirm>
+  //     </>
+  //   }
+  // }]
+  // return <>
+  //   {holder}
+  //   <Card >
+  //     <TableFilter items={items} onSearch={onSearch} onReset={onReset} />
+  //   </Card>
+  //   <Card>
+  //     <Button type='primary' style={{ marginBottom: 12 }} onClick={exportFile}>导出</Button>
+  //     <Table
+  //       loading={loading}
+  //       columns={columns}
+  //       dataSource={data?.data}
+  //       scroll={{ x: 'max-content' }}
+  //       pagination={{
+  //         pageSize: filter.pageSize,
+  //         current: filter.page,
+  //         total: data?.total,
+  //         showTotal: (total) => `共${total}条`,
+  //         onChange: (page, pageSize) => {
+  //           onChangeFilter('page')(page);
+  //           onChangeFilter('pageSize')(pageSize);
+  //         }
+  //       }}
+  //     />
+  //   </Card >
+  // </>
 }
 export default EmploymentList;

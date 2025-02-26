@@ -1,0 +1,54 @@
+.employment-page {
+  .employment-page-search {
+    height: 32px;
+    margin-top: 12px;
+    padding: 0px 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    .adm-input {
+      background: #fff;
+      height: 100%;
+      border-radius: 24px;
+      // padding-left: 12px;
+    }
+    .download {
+      width: 48px;
+      height: 24px;
+    }
+  }
+  .employment-page-list {
+    margin-top: 12px;
+    padding: 0 12px;
+    .employment-page-list-content {
+      .employment-page-list-content-info {
+        padding: 12px;
+        background-color: #fff;
+        border-radius: 8px;
+        &:not(:last-child) {
+          margin-bottom: 12px;
+        }
+        .employment-page-list-content-info-item {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          &:not(:last-child) {
+            margin-bottom: 8px;
+          }
+          label {
+            width: 80px;
+          }
+        }
+        .footer {
+          text-align: right;
+          padding-top: 12px;
+          // padding: 4px 0px;
+          border-top: 1px solid #e6e6e6;
+          .adm-button:not(:last-child) {
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+  }
+}

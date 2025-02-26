@@ -5,10 +5,9 @@ export interface EmploymentListItem {
   idCard: string;
   bank: string;
   name: string;
-  bankBranch: string;
+  bankName: string;
   bankLocation: string;
   phone: string;
-  money: string;
 }
 export interface EmploymentListInfo {
   data: EmploymentListItem[];

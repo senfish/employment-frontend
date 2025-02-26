@@ -28,14 +28,14 @@ const Login = () => {
   }
   return <div className='login'>
     <div className='login-wrapper' >
-      <div className='login-content-left'>
+      {/* <div className='login-content-left'>
         <div className='login-content-left-wrapper'>
           <div className='title'>LOGO</div>
           <div className='hello'>Hello</div>
           <div className='welcome'>welcome!</div>
           <div className='footer'>欢迎登录管理系统</div>
         </div>
-      </div>
+      </div> */}
       <div className='login-content-right'>
         <div className='login-title'>用户登录</div>
         <div className='login-form'>
