@@ -1,29 +1,35 @@
-# Rsbuild project
+# employment-frontend
 
-## Setup
+## 员工信息录入系统
 
-Install the dependencies:
+### 录入模块
 
-```bash
-pnpm install
+- 支持上传身份证、银行卡照片，OCR 智能识别卡号回填
+
+### 员工管理模块
+
+- 支持员工信息的增删改查
+- 支持员工信息的导出
+
+## deploy
+
+### build
+
+```
+docker build -t employment-fe .
 ```
 
-## Get started
+### stop
 
-Start the dev server:
-
-```bash
-pnpm dev
+```
+docker stop employment-fe
+docker rm employment-fe
 ```
 
-Build the app for production:
+### run
 
-```bash
-pnpm build
+```
+docker run -d -p 80:80 --name employment-fe employment-fe
 ```
 
-Preview the production build locally:
-
-```bash
-pnpm preview
-```
+后续考虑用 `docker-compose` 来部署
